@@ -32,6 +32,7 @@ class JogoAdivinhação:
         self.inicio()
         level = self.difficulty()
         print('starting...\n')
+        start = time.time()
         while level['chances']>0:
             try:
                 user_guess = int(input('Enter your guess: '))
@@ -41,6 +42,8 @@ class JogoAdivinhação:
                 print('Guess out of range')
             level['attemps'] +=1
             if user_guess == self.number:
+                end = time.time()
+                print(f'You took {end-start:2f} to guess correctly ')
                 break
             else:
                 self.hint(user_guess)
