@@ -1,14 +1,12 @@
 import time
 import random
 class JogoAdivinhação:
-    user_score = []
-    def __init__(self):
-        self.number = random.randint(1,100)
+    user_scores = []
 
 
     def inicio(self):
         print('Welcome to the guessing game ')
-        print('Try to guess a number between 1 and 100\nThe difficult will give the number of chances')
+        print('Try to guess a number between 1 and 100\nThe difficult will determine the number of chances')
         (input('Press enter to start\n'))
 
     
@@ -19,19 +17,25 @@ class JogoAdivinhação:
                         3:{'difficulty':'hard', 'chances':3, 'attemps': 0}}
         return dificuldades[choose]
     
-    def hint(self, user_guess:int):
-        if user_guess>self.number:
+
+    def hint(self, user_guess:int, number:int):
+        if user_guess>number:
             print(f'incorrect, the number is less than {user_guess}')
             return
         print(f'incorrect, the number is greater than {user_guess}')
         return
 
+    def ranking(self, user_score:list[dict]):
+        for i in user_score:
+            print(f'{i.items()}')
+            
     
 
     def play(self):
         self.inicio()
         level = self.difficulty()
         print('starting...\n')
+        number = random.randint(1,100)
         start = time.time()
         while level['chances']>0:
             try:
@@ -41,15 +45,23 @@ class JogoAdivinhação:
             except ValueError:
                 print('Guess out of range')
             level['attemps'] +=1
-            if user_guess == self.number:
+            if user_guess == number:
                 end = time.time()
-                print(f'You took {end-start:2f} to guess correctly ')
+                print(f'You took {end-start:.2f} to guess correctly ')
                 break
             else:
                 self.hint(user_guess)
                 level['chances'] -= 1
                 print(f'chances remaining: {level["chances"]}')
-        self.user_score.append(level)
+        self.user_scores.append(level)
+        try:
+            new_try = int(input('Do you want to play again? press 1 to yes, or 0 to end the game\n'))
+        except ValueError:
+            print('incorrect input')
+        if new_try == 1:
+            self.play()
+        self.ranking(self.user_scores)
+
         
 
 game = JogoAdivinhação()
