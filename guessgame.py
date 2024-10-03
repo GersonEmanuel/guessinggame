@@ -1,7 +1,8 @@
 import time
-import random
+import random        
 class JogoAdivinhação:
     user_scores = []
+    
 
 
     def inicio(self):
@@ -25,10 +26,11 @@ class JogoAdivinhação:
         print(f'incorrect, the number is greater than {user_guess}')
         return
 
+
     def ranking(self, user_score:list[dict]):
         for i in user_score:
-            print(f'{i.items()}')
-            
+            print(f'in this game you guessed in {i['time']} seconds with {i['attemps']} attemps in {i['difficulty']} mode')
+        
     
 
     def play(self):
@@ -37,6 +39,7 @@ class JogoAdivinhação:
         print('starting...\n')
         number = random.randint(1,100)
         start = time.time()
+        win = False
         while level['chances']>0:
             try:
                 user_guess = int(input('Enter your guess: '))
@@ -47,25 +50,31 @@ class JogoAdivinhação:
             level['attemps'] +=1
             if user_guess == number:
                 end = time.time()
-                print(f'You took {end-start:.2f} to guess correctly ')
+                print(f'You took {end-start:.2f} seconds to guess correctly ')
+                win = True
                 break
             else:
-                self.hint(user_guess)
+                self.hint(user_guess, number)
                 level['chances'] -= 1
                 print(f'chances remaining: {level["chances"]}')
-        self.user_scores.append(level)
+        self.user_scores.append({'difficulty':level['difficulty'], 'attemps':level['attemps'], 'time':end-start})
+        if win:
+           print('Congratulations, you won')
+           print()
+        else:
+            print(f'Oh no, you lost, the number were {number}')
+            print() 
         try:
             new_try = int(input('Do you want to play again? press 1 to yes, or 0 to end the game\n'))
         except ValueError:
             print('incorrect input')
         if new_try == 1:
             self.play()
+        print('-'*80)
+        print('here are the scores of your games ')
         self.ranking(self.user_scores)
 
         
-
-game = JogoAdivinhação()
-game.play() 
             
                 
         
